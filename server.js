@@ -1,6 +1,6 @@
 var express = require('express'),
     config = require('config'),
-    fs = require('fs'),
+	sys = require('sys'),
 	exec = require('child_process').exec;
 
 var properties = {
@@ -9,10 +9,12 @@ var properties = {
     port: config.get('server.port')
 };
 
+function pipeOut(error, stdout, stderr) { sys.puts(stdout) }
+
 var app = express();
 
 app.get('/openGate/', function (req, res) {
-	exec(openGateScript);
+	exec(properties.openGateScript, pipeOut);
     res.writeHead(200, {
         'content-type': 'text/plain',
         'cache-control': 'private, no-cache, no-store, must-revalidate',
