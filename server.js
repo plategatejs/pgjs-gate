@@ -14,9 +14,13 @@ function pipeOut(error, stdout, stderr) { sys.puts(stdout) }
 
 var app = express();
 
+console.log('Starting gate contol server...');
+
 app.get('/openGate/', function (req, res) {
+    console.log('Got opening request, opening the gate...');
     exec(properties.openGateScript, pipeOut);
     setTimeout(function() {
+            console.log('Gate open time has elapsed, closing the gate...');
             exec(properties.closeGateScript, pipeOut);
         },
         properties.gateOpenTime
