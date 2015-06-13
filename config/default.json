@@ -1,4 +1,7 @@
 {
+    "gate" : {
+        "openTime" : 15000
+    },
     "scripts": {
         "openGate": "~/workspace/pgjs/pgjs-gate/scripts/openGate.sh",
         "closeGate": "~/workspace/pgjs/pgjs-gate/scripts/closeGate.sh"

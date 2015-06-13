@@ -4,6 +4,7 @@ var express = require('express'),
     exec = require('child_process').exec;
 
 var properties = {
+    gateOpenTime : config.get('gate.openTime'),
     openGateScript: config.get('scripts.openGate'),
     closeGateScript: config.get('scripts.closeGate'),
     port: config.get('server.port')
@@ -15,6 +16,11 @@ var app = express();
 
 app.get('/openGate/', function (req, res) {
     exec(properties.openGateScript, pipeOut);
+    setTimeout(function() {
+            exec(properties.closeGateScript, pipeOut);
+        },
+        properties.gateOpenTime
+    );
     res.writeHead(200, {
         'content-type': 'text/plain',
         'cache-control': 'private, no-cache, no-store, must-revalidate',
