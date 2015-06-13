@@ -1,0 +1,14 @@
+{
+  "name": "pgjs-gate",
+  "version": "0.1.0",
+  "description": "pgjs-gate",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "author": "plategatejs",
+  "license": "MIT",
+  "dependencies": {
+    "config": "^1.14.0",
+    "express": "^4.12.3"
+  }
+}
