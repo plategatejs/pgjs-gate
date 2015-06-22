@@ -3,8 +3,8 @@
         "openTime" : 15000
     },
     "scripts": {
-        "openGate": "~/workspace/pgjs/pgjs-gate/scripts/openGate.sh",
-        "closeGate": "~/workspace/pgjs/pgjs-gate/scripts/closeGate.sh"
+        "openGate": "~/pgjs-gate/scripts/gate.js 1",
+        "closeGate": "~/pgjs-gate/scripts/gate.js 0"
     },
     "server": {
         "port": 8080
