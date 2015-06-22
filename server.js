@@ -4,10 +4,23 @@ var express = require('express'),
 
 var properties = {
     gateOpenTime : config.get('gate.openTime'),
-    openGateScript: config.get('scripts.openGate'),
-    closeGateScript: config.get('scripts.closeGate'),
+    directControl: config.get('directControl'),
     port: config.get('server.port')
 };
+
+var mraa, pin;
+if (properties.directControl) {
+    properties.gpio = config.get('gpio');
+
+    mraa = require('mraa');
+    mraa.init();
+    pin = new mraa.Gpio(properties.gpio);
+    pin.dir(mraa.DIR_OUT);
+}
+else {
+    properties.openGateScript = config.get('scripts.openGate');
+    properties.closeGateScript = config.get('scripts.closeGate');
+}
 
 var timeout;
 var isOpen = false;
@@ -15,14 +28,26 @@ var isOpen = false;
 var closeGate = function () {
     console.log('Closing the gate.');
     isOpen = false;
-    exec(properties.closeGateScript);
+
+    if (properties.directControl) {
+        pin.write(0);
+    }
+    else {
+        exec(properties.closeGateScript);
+    }
 };
 
 var openGate = function () {
     if (!isOpen) {
         console.log('Opening the gate.');
-        exec(properties.openGateScript);
         isOpen = true;
+
+        if (properties.directControl) {
+            pin.write(1);
+        }
+        else {
+            exec(properties.openGateScript);
+        }
     }
 
     clearTimeout(timeout);

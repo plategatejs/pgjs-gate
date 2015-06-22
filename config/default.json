@@ -2,6 +2,8 @@
     "gate" : {
         "openTime" : 15000
     },
+    "directControl": true,
+    "gpio": 12,
     "scripts": {
         "openGate": "~/pgjs-gate/scripts/gate.js 1",
         "closeGate": "~/pgjs-gate/scripts/gate.js 0"
