@@ -1,6 +1,5 @@
 var express = require('express'),
     config = require('config'),
-    sys = require('sys'),
     exec = require('child_process').exec;
 
 var properties = {
@@ -10,28 +9,33 @@ var properties = {
     port: config.get('server.port')
 };
 
-function pipeOut(error, stdout, stderr) { sys.puts(stdout) }
+var timeout;
+var isOpen = false;
+
+var closeGate = function () {
+    console.log('Closing the gate.');
+    isOpen = false;
+    exec(properties.closeGateScript);
+};
+
+var openGate = function () {
+    if (!isOpen) {
+        console.log('Opening the gate.');
+        exec(properties.openGateScript);
+        isOpen = true;
+    }
+
+    clearTimeout(timeout);
+    timeout = setTimeout(closeGate, properties.gateOpenTime);
+};
 
 var app = express();
 
-console.log('Starting gate contol server...');
-
-app.get('/openGate/', function (req, res) {
-    console.log('Got opening request, opening the gate...');
-    exec(properties.openGateScript, pipeOut);
-    setTimeout(function() {
-            console.log('Gate open time has elapsed, closing the gate...');
-            exec(properties.closeGateScript, pipeOut);
-        },
-        properties.gateOpenTime
-    );
-    res.writeHead(200, {
-        'content-type': 'text/plain',
-        'cache-control': 'private, no-cache, no-store, must-revalidate',
-        'expires': '0',
-        'pragma': 'no-cache'
-    });
-    res.end('Opening!');
+app.get('/openGate', function (req, res) {
+    console.log('Received gate opening request.');
+    openGate();
 });
 
-app.listen(properties.port);
+app.listen(properties.port, function () {
+    console.log('Gate control server started.');
+});
