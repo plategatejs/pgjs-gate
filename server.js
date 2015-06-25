@@ -58,6 +58,7 @@ var app = express();
 
 app.get('/openGate', function (req, res) {
     console.log('Received gate opening request.');
+    res.end();
     openGate();
 });
 
