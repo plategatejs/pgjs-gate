@@ -9,7 +9,8 @@
   "logger": {
     "console": {
       "level": "info",
-      "colorize": true
+      "colorize": true,
+      "timestamp": true
     }
   }
 }
